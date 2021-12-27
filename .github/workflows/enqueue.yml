@@ -52,7 +52,3 @@ jobs:
           git tag mq/pr/${{ github.event.issue.number }}
           git push -u origin mq
           git push origin --tags
-      - name: Run tests
-        if: ${{ steps.try_enqueue.conclusion }} == "success"
-        run: |
-          true

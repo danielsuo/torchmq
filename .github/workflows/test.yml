@@ -1,0 +1,14 @@
+name: Test commit in merge queue
+
+on:
+  push:
+    branches:
+      - mq
+
+jobs:
+  test_pr:
+    name: Test PR
+    concurrency: test_pr
+    steps:
+      - name: Run tests
+        run: true
