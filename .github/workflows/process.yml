@@ -11,3 +11,14 @@ name: Process merge queue
 on:
   schedule:
     - cron: "0/5 * * * *"
+
+jobs:
+  enqueue_pr:
+    name: Process PR
+    concurrency:
+      group: process_pr
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out pull request from repo
+        uses: actions/checkout@v2
+      - name: 
