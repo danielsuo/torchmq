@@ -15,8 +15,8 @@ jobs:
     name: PR comment
     if: |
       github.event.issue.pull_request &&
-      ${{ github.event.comment.author_association == "OWNER" }} &&
-      ${{ github.event.comment.body == "merge" }}
+      ${{ github.event.comment.author_association }} == "OWNER" &&
+      ${{ github.event.comment.body }} == "merge"
     runs-on: ubuntu-latest
     steps:
       - name: Dump GitHub context
