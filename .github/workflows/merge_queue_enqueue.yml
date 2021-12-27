@@ -2,8 +2,12 @@
 # - What if I want to prioritize PR?
 # - How do users / MQ operator quickly / easily resolve conflicts?
 # Rebase onto MQ_HEAD
+# How to test for soft conflicts quickly and efficiently?
 
 # TODO: Author association should be expanded from `OWNER` (https://docs.github.com/en/graphql/reference/enums#commentauthorassociation)
+# TODO: Replace actions/checkout@v2 with appropriate checkout action
+# TODO: Add try loop for initial rebase
+# TODO: (potentially) protect mq branch, while allowing manual
 name: Merge Queue Enqueue
 
 on:
@@ -13,12 +17,27 @@ on:
 jobs:
   pr_commented:
     name: PR comment
+
+    # Check this is a PR comment from an OWNER to merge
     if: |
       github.event.issue.pull_request &&
       ${{ github.event.comment.author_association }} == "OWNER" &&
       ${{ github.event.comment.body }} == "merge"
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout merge queue branch from repo
+        uses: actions/checkout@v2
+          with:
+            ref: "mq"
+      - name: Try enqueueing squashed PR to merge queue
+        run: |
+          git merge --ff-only ${{ github.sha }}
+          git checkout -b mq-squash mq
+          git rebase mq-squash ${{ github.sha }}
+          git reset --soft mq
+          git commit -m ${{ github.event.issue.title}}
+          git rebase mq mq-squash
+          git checkout mq
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
