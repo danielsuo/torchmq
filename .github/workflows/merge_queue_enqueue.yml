@@ -2,6 +2,8 @@
 # - What if I want to prioritize PR?
 # - How do users / MQ operator quickly / easily resolve conflicts?
 # Rebase onto MQ_HEAD
+
+# TODO: Author association should be expanded from `OWNER`
 name: Merge Queue Enqueue
 
 on:
@@ -11,7 +13,10 @@ on:
 jobs:
   pr_commented:
     name: PR comment
-    if: ${{ github.event.issue.pull_request}}
+    if: |
+      github.event.issue.pull_request &&
+      github.event.comment.author_association == "owner" &&
+      github.event.comment.body == "merge"
     runs-on: ubuntu-latest
     steps:
       - name: Dump GitHub context
