@@ -30,8 +30,8 @@ jobs:
     steps:
       - name: Check out pull request from repo
         uses: actions/checkout@v2
-          with:
-            ref: github.sha
+        with:
+          ref: github.sha
       - name: Set up git username, email
         # TODO: perhaps get username/email from PR vs. last commit
         run: |
