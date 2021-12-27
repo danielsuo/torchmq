@@ -7,6 +7,7 @@ from pathlib import Path
 import subprocess
 import time
 
+output = subprocess.run(["git", "pull"])
 branch = f"branch-{str(int(time.time()))}"
 output = subprocess.run(["git", "checkout", "-b", branch])
 
@@ -23,4 +24,4 @@ output = subprocess.run(["git", "commit", "-am", f"Add branch {branch}."])
 output = subprocess.run(["git", "push", "-u", "origin", branch])
 
 output = subprocess.run(["git", "checkout", "main"])
-output = subprocess.run(["gh", "pr", "create", "--base", "main", "--title", branch, "--head", branch])
+output = subprocess.run(["gh", "pr", "create", "--base", "main", "--title", branch, "--head", branch, "-f"])
