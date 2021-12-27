@@ -1,0 +1,18 @@
+# Check for hard conflicts against MQ_HEAD
+# - What if I want to prioritize PR?
+# - How do users / MQ operator quickly / easily resolve conflicts?
+# Rebase onto MQ_HEAD
+name: Merge Queue Enqueue
+
+on:
+  issue_comment:
+    types: created
+
+jobs:
+  pr_commented:
+    name: PR comment
+    if: ${{ github.event.issue.pull_request}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confirm what's in an issue object
+        run: echo ${{ github.event. issue }}
