@@ -6,7 +6,7 @@ from pathlib import Path
 import subprocess
 import time
 
-branch = f"{str(int(time.time()))}\n"
+branch = f"pr-{str(int(time.time()))}\n"
 output = subprocess.run(["git", "checkout", "-b", branch])
 
 workdir = Path.resolve(Path(__file__)).parent.parent / "tmp"
