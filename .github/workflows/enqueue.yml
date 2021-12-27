@@ -45,6 +45,7 @@ jobs:
           git merge --squash ${{ github.sha }}
       - name: Commit and tag enqueued PR
         if: ${{ steps.try_enqueue.conclusion }} == "success"
+        run: |
           git add .
           git commit -am "${{ github.event.issue.title }}"
           git tag mq/pr/${{ github.event.issue.number }}
