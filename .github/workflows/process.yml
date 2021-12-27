@@ -22,4 +22,9 @@ jobs:
       - name: Check out pull request from repo
         uses: actions/checkout@v2
           with:
-      - name:
+            ref: mq
+            fetch-depth: 0
+      - name: Get list of commits
+        run: echo `revs=$(git rev-list main..mq)` >> $GITHUB_ENV
+      - name: Submit GraphQL query
+        run: echo "${{ env.revs }}"
