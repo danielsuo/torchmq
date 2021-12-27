@@ -4,10 +4,12 @@
 # Rebase onto MQ_HEAD
 # How to test for soft conflicts quickly and efficiently?
 
+# TODO: give name mq/pr/#
 # TODO: Author association should be expanded from `OWNER` (https://docs.github.com/en/graphql/reference/enums#commentauthorassociation)
 # TODO: Replace actions/checkout@v2 with appropriate checkout action
 # TODO: Add try loop for initial rebase
 # TODO: (potentially) protect mq branch, while allowing manual
+# TODO: Figure out flakiness / job retries
 name: Merge Queue Enqueue
 
 on:
@@ -15,8 +17,10 @@ on:
     types: [created]
 
 jobs:
-  pr_commented:
-    name: PR comment
+  enqueue_pr:
+    name: Enqueue PR
+    concurrency:
+      group: enqueue_pr
 
     # Check this is a PR comment from an OWNER to merge
     if: |
@@ -25,40 +29,29 @@ jobs:
       ${{ github.event.comment.body }} == "merge"
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout merge queue branch from repo
+      - name: Check out pull request from repo
         uses: actions/checkout@v2
           with:
-            ref: "mq"
-      - name: Try enqueueing squashed PR to merge queue
+            ref: github.sha
+      - name: Set up git username, email
+        # TODO: perhaps get username/email from PR vs. last commit
         run: |
-          git merge --ff-only ${{ github.sha }}
-          git checkout -b mq-squash mq
-          git rebase mq-squash ${{ github.sha }}
-          git reset --soft mq
-          git commit -m ${{ github.event.issue.title}}
-          git rebase mq mq-squash
-          git checkout mq
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJSON(job) }}
-        run: echo "$JOB_CONTEXT"
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJSON(steps) }}
-        run: echo "$STEPS_CONTEXT"
-      - name: Dump runner context
-        env:
-          RUNNER_CONTEXT: ${{ toJSON(runner) }}
-        run: echo "$RUNNER_CONTEXT"
-      - name: Dump strategy context
-        env:
-          STRATEGY_CONTEXT: ${{ toJSON(strategy) }}
-        run: echo "$STRATEGY_CONTEXT"
-      - name: Dump matrix context
-        env:
-          MATRIX_CONTEXT: ${{ toJSON(matrix) }}
-        run: echo "$MATRIX_CONTEXT"
+          git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
+          git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
+      - name: Check out merge queue branch
+        run: git checkout mq
+      - name: Try enqueueing squashed PR to merge queue
+        id: try_enqueue
+        run: |
+          git merge --squash ${{ github.sha }}
+      - name: Commit and tag enqueued PR
+        if: ${{ steps.try_enqueue.conclusion }} == "success"
+          git add .
+          git commit -am "${{ github.event.issue.title }}"
+          git tag mq/pr/${{ github.event.issue.number }}
+          git push -u origin mq
+          git push origin --tags
+      - name: Run tests
+        if: ${{ steps.try_enqueue.conclusion }} == "success"
+        run: |
+          true
