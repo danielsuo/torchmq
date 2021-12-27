@@ -30,12 +30,13 @@ jobs:
     steps:
       - name: Get PR last commit hash
         run: |
-          echo "pr_sha=$(curl -sb -H ${{ github.event.issue.pull_request.patch_url }} | head -n 1 | cut -d' ' -f 2)" >> $GITHUB_ENV
-          echo ${{ env.pr_sha }}
+          PR_SHA="$(curl -sb -H ${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/pulls/${{ github.event.issue.number }})"
+          echo "PR_SHA=$PR_SHA" >> $GITHUB_ENV
+          echo ${{ env.PR_SHA }}
       - name: Check out pull request from repo
         uses: actions/checkout@v2
         with:
-          ref: ${{ env.pr_sha }}
+          ref: ${{ env.PR_SHA }}
           fetch-depth: 0
       - name: Set up git username, email
         # TODO: perhaps get username/email from PR vs. last commit
@@ -47,7 +48,7 @@ jobs:
       - name: Try enqueueing squashed PR to merge queue
         id: try_enqueue
         run: |
-          git merge --squash ${{ env.sha }}
+          git merge --squash ${{ env.PR_SHA }}
       - name: Commit and tag enqueued PR
         if: ${{ steps.try_enqueue.conclusion }} == "success"
         run: |
