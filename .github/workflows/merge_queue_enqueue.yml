@@ -3,7 +3,7 @@
 # - How do users / MQ operator quickly / easily resolve conflicts?
 # Rebase onto MQ_HEAD
 
-# TODO: Author association should be expanded from `OWNER`
+# TODO: Author association should be expanded from `OWNER` (https://docs.github.com/en/graphql/reference/enums#commentauthorassociation)
 name: Merge Queue Enqueue
 
 on:
