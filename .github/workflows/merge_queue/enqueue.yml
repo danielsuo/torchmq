@@ -1,0 +1,56 @@
+# Check for hard conflicts against MQ_HEAD
+# - What if I want to prioritize PR?
+# - How do users / MQ operator quickly / easily resolve conflicts?
+# Rebase onto MQ_HEAD
+# How to test for soft conflicts quickly and efficiently?
+
+# TODO: Author association should be expanded from `OWNER` (https://docs.github.com/en/graphql/reference/enums#commentauthorassociation)
+# TODO: Replace actions/checkout@v2 with appropriate checkout action
+# TODO: Add try loop for initial rebase
+# TODO: (potentially) protect mq branch, while allowing manual
+# TODO: Figure out flakiness / job retries
+name: Enqueue to merge queue
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  enqueue_pr:
+    name: Enqueue PR
+    concurrency:
+      group: enqueue_pr
+
+    # Check this is a PR comment from an OWNER to merge
+    if: |
+      github.event.issue.pull_request &&
+      ${{ github.event.comment.author_association }} == "OWNER" &&
+      ${{ github.event.comment.body }} == "merge"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out pull request from repo
+        uses: actions/checkout@v2
+          with:
+            ref: github.sha
+      - name: Set up git username, email
+        # TODO: perhaps get username/email from PR vs. last commit
+        run: |
+          git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
+          git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
+      - name: Check out merge queue branch
+        run: git checkout mq
+      - name: Try enqueueing squashed PR to merge queue
+        id: try_enqueue
+        run: |
+          git merge --squash ${{ github.sha }}
+      - name: Commit and tag enqueued PR
+        if: ${{ steps.try_enqueue.conclusion }} == "success"
+          git add .
+          git commit -am "${{ github.event.issue.title }}"
+          git tag mq/pr/${{ github.event.issue.number }}
+          git push -u origin mq
+          git push origin --tags
+      - name: Run tests
+        if: ${{ steps.try_enqueue.conclusion }} == "success"
+        run: |
+          true
