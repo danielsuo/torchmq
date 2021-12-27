@@ -25,6 +25,8 @@ jobs:
           ref: mq
           fetch-depth: 0
       - name: Get list of commits
-        run: echo `revs=$(git rev-list main..mq)` >> $GITHUB_ENV
+        run: |
+          git checkout main
+          echo `revs=$(git rev-list main..mq)` >> $GITHUB_ENV
       - name: Submit GraphQL query
         run: echo "${{ env.revs }}"
