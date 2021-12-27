@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # TODO (danielsuo): DELETEME
+# NOTE: Assumes you have https://github.com/cli/cli
 
 from pathlib import Path
 import subprocess
@@ -22,3 +23,4 @@ output = subprocess.run(["git", "commit", "-am", f"Add branch {branch}."])
 output = subprocess.run(["git", "push", "-u", "origin", branch])
 
 output = subprocess.run(["git", "checkout", "main"])
+output = subprocess.run(["gh", "pr", "create", "--base", "main", "--title", branch, "--head", branch])
