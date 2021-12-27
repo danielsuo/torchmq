@@ -1,5 +1,10 @@
-# Periodically 
+# Periodically do following
+# start from master + 1
+# check status
+# if success, fast forward
+# if fail, evict, patch up, cancel
+# - evict: 
 on:
   push:
     branches:
-      - aosdijfoisajdf
+      - aosdijfoisa
