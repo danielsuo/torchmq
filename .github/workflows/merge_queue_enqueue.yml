@@ -15,4 +15,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Confirm what's in an issue object
-        run: echo ${{ github.event.issue }}
+        run: echo ${{ github.event.issue.author_association }}
