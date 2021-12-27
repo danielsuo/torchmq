@@ -7,7 +7,7 @@ from pathlib import Path
 import subprocess
 import time
 
-output = subprocess.run(["git", "pull"])
+output = subprocess.run(["git", "pull", "--hard"])
 branch = f"branch-{str(int(time.time()))}"
 output = subprocess.run(["git", "checkout", "-b", branch])
 
