@@ -31,7 +31,7 @@ jobs:
       - name: Get PR last commit hash
         run: |
           PR_SHA="$(curl -sb -H ${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/pulls/${{ github.event.issue.number }})"
-          echo "PR_SHA=$PR_SHA" >> $GITHUB_ENV
+          echo "::set-env name=PR_SHA::$PR_SHA"
           echo ${{ env.PR_SHA }}
       - name: Check out pull request from repo
         uses: actions/checkout@v2
