@@ -6,7 +6,7 @@ name: Merge Queue Enqueue
 
 on:
   issue_comment:
-    types: created
+    types: [created]
 
 jobs:
   pr_commented:
