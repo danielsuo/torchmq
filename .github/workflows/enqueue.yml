@@ -30,7 +30,7 @@ jobs:
     steps:
       - name: Get PR last commit hash
         run: |
-          echo `pr_sha=curl -sb -H ${{ github.event.issue.pull_request.patch_url }} | head -n 1 | cut -d" " -f 2` >> $GITHUB_ENV
+          echo `pr_sha=$(curl -sb -H ${{ github.event.issue.pull_request.patch_url }} | head -n 1 | cut -d" " -f 2)` >> $GITHUB_ENV
       - name: Check out pull request from repo
         uses: actions/checkout@v2
         with:
