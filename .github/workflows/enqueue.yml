@@ -32,6 +32,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ github.sha }}
+          fetch-depth: 0
       - name: Set up git username, email
         # TODO: perhaps get username/email from PR vs. last commit
         run: |
