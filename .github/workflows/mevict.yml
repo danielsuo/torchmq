@@ -1,0 +1,32 @@
+# Periodically do following
+# start from master + 1
+# check status
+# if success
+# - fast forward
+# - clean up tags
+# if fail
+# - evict / fix: rebase -i N+1 onto N - 1
+# - restart
+name: Merge and evict merge queue
+on:
+  schedule:
+    - cron: "0/5 * * * *"
+
+jobs:
+  mevict_pr:
+    name: Mevict PR
+    concurrency:
+      group: mevict_pr
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out pull request from repo
+        uses: actions/checkout@v2
+        with:
+          ref: mq
+          fetch-depth: 0
+      - name: Get list of commits
+        run: |
+          git checkout main
+          echo `revs=$(git rev-list main..mq)` >> $GITHUB_ENV
+      - name: Submit GraphQL query
+        run: echo "${{ env.revs }}"
