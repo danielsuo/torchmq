@@ -34,7 +34,7 @@ jobs:
           fetch-depth: 0
       - name: Get PR last commit hash
         run: |
-          ${GITHUB_WORKSPACE}/.github/scripts/get_pr_sha.py ${{ github.repository }} ${{ github.event.issue.number }}
+          ${GITHUB_WORKSPACE}/.github/scripts/get_pr_sha.py ${{ github.repository }} ${{ github.event.issue.number }} /tmp/sha
       - name: Checkout PR
         run: |
           git checkout $(cat /tmp/sha)
