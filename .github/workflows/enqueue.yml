@@ -30,7 +30,10 @@ jobs:
     steps:
       - name: Get PR last commit hash
         run: |
-          echo ${{ toJSON("$(curl -sb -H ${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/pulls/${{ github.event.issue.number }})").head.sha }} >> /tmp/sha
+          ls /tmp
+          URL=${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/pulls/${{ github.event.issue.number }} \
+            DATA=$(curl -sb -H $URL) \
+            echo ${{ toJSON(DATA).head.sha }} >> /tmp/sha
       - name: Check out pull request from repo
         uses: actions/checkout@v2
         with:
