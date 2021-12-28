@@ -36,6 +36,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Checkout
         run: |
           git checkout $(cat /tmp/sha)
       - name: Set up git username, email
