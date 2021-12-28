@@ -7,16 +7,16 @@
 # if fail
 # - evict / fix: rebase -i N+1 onto N - 1
 # - restart
-name: Process merge queue
+name: Merge and evict merge queue
 on:
   schedule:
     - cron: "0/5 * * * *"
 
 jobs:
-  enqueue_pr:
-    name: Process PR
+  mevict_pr:
+    name: Mevict PR
     concurrency:
-      group: process_pr
+      group: mevict_pr
     runs-on: ubuntu-latest
     steps:
       - name: Check out pull request from repo

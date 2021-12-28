@@ -8,7 +8,7 @@ on:
 jobs:
   test_pr:
     name: Test PR
-    concurrency: test_pr
+    runs-on: ubuntu-latest
     steps:
       - name: Run tests
         run: true
