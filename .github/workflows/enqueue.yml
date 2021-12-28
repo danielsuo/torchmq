@@ -18,6 +18,10 @@ on:
 jobs:
   enqueue_pr:
     name: Enqueue PR
+
+    # NOTE: Must create environment with PERSONAL_ACCESS_TOKEN secret
+    # https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment
+    environment: ENQUEUE
     concurrency:
       group: enqueue_pr
 
@@ -32,6 +36,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       - name: Get PR last commit hash
         run: |
           ${GITHUB_WORKSPACE}/.github/scripts/get_pr_sha.py ${{ github.repository }} ${{ github.event.issue.number }} /tmp/sha
@@ -55,5 +60,5 @@ jobs:
           git add .
           git commit -am "${{ github.event.issue.title }}"
           git tag mq/pr/${{ github.event.issue.number }}
-          git push -u origin mq
+          git push -u https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git mq
           git push origin --tags
