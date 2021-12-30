@@ -51,13 +51,20 @@ def main():
 
     args = parser.parse_args()
 
+    print(args)
+
     owner, name = args.repo.split("/")
+
+    print(owner, name)
+
     conclusions = query_gh_gql(
         os.path.join(os.path.dirname(__file__), "get_mq_status.gql"),
         args.token,
         owner,
         name,
     )
+
+    print(conclusions)
 
     output = subprocess.run(["git", "rev-list", "main..mq"], capture_output=True)
     revs = output.stdout.decode("ascii").split()

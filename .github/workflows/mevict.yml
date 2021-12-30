@@ -31,9 +31,4 @@ jobs:
       - name: Run mevict
         id: run_mevict
         run: |
-          output=$(${GITHUB_WORKSPACE}/.github/scripts/mevict.py ${{ secrets.PERSONAL_ACCESS_TOKEN }} --repo ${{ github.repository }})
-          output="${output//'%'/'%25'}"
-          output="${output//$'\n'/'%0A'}"
-          output="${output//$'\r'/'%0D'}"
-          echo $output
-          echo asoidjfoaisdjf
+          ${GITHUB_WORKSPACE}/.github/scripts/mevict.py ${{ secrets.PERSONAL_ACCESS_TOKEN }} --repo ${{ github.repository }}
