@@ -64,7 +64,7 @@ def main():
     revs.reverse()
 
     for rev in revs:
-        print(rev)
+        print(rev, conclusions[rev])
 
 if __name__ == "__main__":
     main()

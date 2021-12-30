@@ -17,6 +17,7 @@ jobs:
     name: Mevict PR
     concurrency:
       group: mevict_pr
+    environment: ENQUEUE
     runs-on: ubuntu-latest
     steps:
       - name: Prepare environment
@@ -26,9 +27,5 @@ jobs:
         with:
           ref: mq
           fetch-depth: 0
-      - name: Get list of commits
-        run: |
-          git checkout main
-          echo `revs=$(git rev-list main..mq)` >> $GITHUB_ENV
-      - name: Submit GraphQL query
-        run: echo "${{ env.revs }}"
+      - name: Run mevict
+        run: ${GITHUB_WORKSPACE}/.github/scripts/mevict.py ${{ secrets.PERSONAL_ACCESS_TOKEN }} --repo ${{ github.repository }}
