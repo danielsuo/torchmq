@@ -9,6 +9,7 @@
 # - restart
 name: Merge and evict merge queue
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0/5 * * * *"
 
