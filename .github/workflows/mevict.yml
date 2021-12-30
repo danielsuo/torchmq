@@ -19,6 +19,8 @@ jobs:
       group: mevict_pr
     runs-on: ubuntu-latest
     steps:
+      - name: Prepare environment
+        run: pip3 install requests
       - name: Check out pull request from repo
         uses: actions/checkout@v2
         with:

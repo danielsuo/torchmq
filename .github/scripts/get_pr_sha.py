@@ -7,9 +7,9 @@ import urllib.request
 
 def main():
     parser = argparse.ArgumentParser(description="Get SHA of PR from GitHub.")
-    parser.add_argument("repo", type=str, help="repo name")
-    parser.add_argument("num", type=int, help="pr number")
-    parser.add_argument("sha_path", type=str, default="/tmp/sha", help="where to write sha")
+    parser.add_argument("--repo", type=str, help="repo name")
+    parser.add_argument("--num", type=int, help="pr number")
+    parser.add_argument("--sha_path", type=str, default="/tmp/sha", help="where to write sha")
 
     args = parser.parse_args()
 

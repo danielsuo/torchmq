@@ -39,7 +39,7 @@ jobs:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       - name: Get PR last commit hash
         run: |
-          ${GITHUB_WORKSPACE}/.github/scripts/get_pr_sha.py ${{ github.repository }} ${{ github.event.issue.number }} /tmp/sha
+          ${GITHUB_WORKSPACE}/.github/scripts/get_pr_sha.py --repo ${{ github.repository }} --num ${{ github.event.issue.number }} --sha_path /tmp/sha
       - name: Checkout PR
         run: |
           git checkout $(cat /tmp/sha)
