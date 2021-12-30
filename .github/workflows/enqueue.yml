@@ -4,6 +4,7 @@
 # Rebase onto MQ_HEAD
 # How to test for soft conflicts quickly and efficiently?
 
+# TODO: Rename environment from ENQUEUE to MERGE_QUEUE
 # TODO: Author association should be expanded from `OWNER` (https://docs.github.com/en/graphql/reference/enums#commentauthorassociation)
 # TODO: Replace actions/checkout@v2 with appropriate checkout action
 # TODO: Add try loop for initial rebase

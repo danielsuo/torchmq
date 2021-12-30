@@ -32,4 +32,3 @@ jobs:
         id: run_mevict
         run: |
           ${GITHUB_WORKSPACE}/.github/scripts/mevict.py ${{ secrets.PERSONAL_ACCESS_TOKEN }} --repo ${{ github.repository }}
-          ls .github/scripts
